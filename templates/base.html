@@ -1,0 +1,175 @@
+{{ define "base" }}
+{{ $cf := .ClientFlags }}
+{{ $ds := band $cf 1 }}
+{{ $   := . }}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>{{ if .TitleBar }}{{ .T .TitleBar }} - {{ else if and .Context.User.Username (not (has .Context.User.Privileges 1)) }}Restricted - {{ end }}Homaru!Anarchy</title>
+
+		<link rel="stylesheet" type="text/css" href="/static/css/developer.css">
+		<link rel="stylesheet" type="text/css" href="/static/semantic-min.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/home.css">
+		<link rel="stylesheet" type="text/css" href="/static/ripple.css?{{ unixNano }}">
+		<link rel="stylesheet" type="text/css" href="/static/snow/snow.css?{{ unixNano }}">
+		<link href="/static/css/beatmaps.dfc480ea.chunk.css" rel="stylesheet">
+	</head>
+	{{/* Restricted Meme */}}
+	{{ if and .Context.User.Username (not (has .Context.User.Privileges 1)) }}
+		<center>
+			<div class="ui container">
+				<br>
+				<div class="ui warning message">
+					{{ $.T "How tf did you get restricted on a anarchy server, which means NO RULES? We are disappointed." | html }}
+				</div>
+				<img src="static/restricted-meme/cheating-detected.jpg" width=auto/>
+				<audio autoplay loop> {{/* Use an audio tag instead of an iframe tag */}}
+					<source src="static/restricted-meme/flowers.mp3" type="audio/mpeg"/>
+				</audio>
+			</div>
+		</center>
+	{{ else }}
+	<body {{ if $ds }} class="ds"{{ end }}>
+		{{/*
+			If we're asked to disable the hugeheading, but a KyutGrill is set, it will become the background of the page.
+			This is mainly used in user profiles, allowing users to set their profile background.
+			If we're asked to disable the hugeheading, and a KyutGrill is not set, navbar has the `dropped` class.
+		*/}}
+		<div class="ui full height main wrapper"
+			{{ if and .DisableHH .KyutGrill }}
+				style="background-image: url('{{ if .KyutGrillAbsolute }}{{ .KyutGrill }}{{ else }}/static/headers/{{ .KyutGrill }}{{ end }}');"
+			{{ else if .SolidColour }}
+				style="background-color: {{ .SolidColour }}"
+			{{ end }}>
+			{{ template "navbar" . }}
+			{{ if not .DisableHH }}
+				<div class="huge heading {{ if .HeadingOnRight }}right{{ end }} dropped"
+					style="background-image: url('{{ if .KyutGrillAbsolute }}{{ .KyutGrill }}{{ else }}/static/headers/{{ or .KyutGrill "default.jpg" }}{{ end }}');">
+					<div id="snow-container">
+						<div>
+							<div class="snow large"></div>
+							<div class="snow large delayed"></div>
+							
+							<div class="snow medium"></div>
+							<div class="snow medium delayed"></div>
+							
+							<div class="snow small"></div>
+							<div class="snow small delayed"></div>
+						</div>
+					</div>
+					<div class="ui container">
+						<h1>{{ if .HeadingTitle }}{{ .T .HeadingTitle | html }}{{ else }}{{ .T .TitleBar }}{{ end }}</h1>
+					</div>
+				</div>
+			{{ end }}
+
+			<div class="h-container">
+				<div class="ui margined container" id="messages-container">
+				<noscript>Research has proven this website works 10000% better if you have JavaScript enabled.</noscript>
+				{{ if and .Context.User.Username (not (has .Context.User.Privileges 1)) }}
+					<div class="ui warning message">
+						{{ $.T "How tf did you get restricted, lol." | html }}
+					</div>
+				{{ end }}
+				{{ if .Messages }}
+						{{ range $i, $v := .Messages }}
+							<div class="ui {{ $v.Type }} message">
+								<i class="close icon"></i>
+								{{ html $v.Content }}
+							</div>
+						{{ end }}
+				{{ end }}
+				{{ $settings := systemSettings "website_maintenance" "game_maintenance" "website_global_alert" }}
+				{{ with $settings.website_global_alert.String }}
+					<div class="ui warning message">
+						{{ . | html }}
+					</div>
+				{{ end }}
+				{{ with $settings.game_maintenance.Int }}
+					<div class="ui warning message">
+						{{ $.T "Homaru's score submission is currently in maintenance mode. You will not be allowed to submit scores for the time being." }}
+					</div>
+				{{ end }}
+				{{ with $settings.website_maintenance.Int }}
+					<div class="ui warning message">
+						{{ $.T "The Homaru website is currently in maintenance mode. Only certain users are allowed to access the full website." }}
+					</div>
+				{{ end }}
+				</div>
+				{{ template "tpl" . }}
+			</div>
+
+		</div>
+			<div class="footer-bg">
+				<div class="ui container">
+					<div class="ui internally celled grid">
+						<div class="row">
+							<div class="three wide column">
+								<div class="footer-info-block">
+									<a class="footer-title">Help</a> 
+									<ul style="list-style-type: none; padding: 0; margin: 0;">
+										<li>
+											<i><a href="https://sugoisu.ml/static/anarchy.exe">Switcher</a></i>
+										</li>
+										<li>
+											<i><a href="/Team">Developers/Team</a></i>
+										</li>
+										<li>
+											<i><a href="/doc/connection_guide">How To Connect</a></i>
+										</li>
+									</ul>
+								</div> 
+							</div>
+							<div class="three wide column">
+								<div class="footer-info-block">
+									<a class="footer-title">Socials</a>
+									<ul style="list-style-type: none; padding: 0; margin: 0;">
+										<li>
+											<i><a href="https://discord.gg/cnaDpVY" target="_blank">Discord</a></i>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="seven wide column">
+								<div class="footer-info-block">
+									<a class="footer-title">About Us</a>
+									<ul style="list-style-type: none; padding: 0; margin: 0;">
+										<li>
+											<i><a href="https://github.com/hazuki-san" target="_blank">Source Code</a></i>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="footer-logo">
+								<span>Homaru!Anarchy</span> 
+								<br>
+								<a class="subtitle"> worlds first anarchy server.</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<script>
+			var hanayoConf = {
+				avatars:   {{ .Conf.AvatarURL }},
+				banchoAPI: {{ .Conf.BanchoAPI }},
+				baseAPI:   {{ .Conf.BaseAPIPublic }},
+				cheesegullAPI: {{ .Conf.CheesegullAPI }},
+			};
+			var currentUserID = {{ .Context.User.ID }};
+		</script>
+		{{/* If we got some more scripts to print, print'em */}}
+		<script src="//twemoji.maxcdn.com/2/twemoji.min.js?2.2"></script>
+		<script src="/static/dist.min.js?{{ unixNano }}"></script>
+		{{ if .Scripts }}
+			{{ range .Scripts }}
+				<script src="{{ . }}?{{ unixNano }}"></script>
+			{{ end }}
+		{{ end }}
+	</body>
+	{{ end }}
+</html>
+{{ end }}

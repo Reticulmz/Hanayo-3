@@ -1,0 +1,137 @@
+t{{/*###
+*/}}
+{{ define "tpl" }}
+{{ $cf := .ClientFlags }}
+{{ $ds := band $cf 1 }}
+{{ $   := . }}
+<head>
+			<meta charset="utf-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<title>Homaru - The first osu! Anarchy server!</title>
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="description" content="The first osu! Anarchy Server." />
+			<meta name="theme-color" content="#ff6666" />
+			<meta name="keywords" content="" />
+			<meta name="author" content="" />
+
+			{{/* Twitter/Facebook Integration */}}
+			<meta property="og:title" content="Homaru"/>
+			<meta property="og:image" content="http://sugoisu.ml/static/css/hentai.png"/>
+			<meta property="og:url" content="http://sugoisu.ml/"/>
+			<meta property="og:site_name" content="Homaru"/>
+			<meta property="og:description" content="The first osu! Anarchy Server."/>
+</head>
+
+<div class="ui container">
+	{{ $set := systemSettings "website_home_alert"}}
+	{{with $set.website_home_alert.String }}
+		<div class="ui info message">
+			<br>
+			{{ . | html }}
+			<br>
+		</div>
+	{{ end }}
+	<br>
+	<div id="content">
+		<div id="home">
+			<link onload="onLoad()" rel="stylesheet" href="/static/css/home.css">
+			<div class="container">
+				<div class="col-lg-12">
+					<div class="main-block">
+						<div class="mirai"></div>
+						<div class="content">
+							<div class="status">
+								{{ range $key, $value := (qb "SELECT COUNT(*) FROM users WHERE privileges >= 3") }}
+								<span>
+									<span style="color: #2094ca;" class="counter-text"> {{ $value }} </span> total users
+								</span>
+								{{ end }}
+								<span style="margin-left: 16px;">
+									<span class="counter-text"> {{ rediget "ripple:online_users" }} </span> online users
+								</span>
+							</div>
+							<br>
+							<span class="text-lg">
+								Homaru!Anarchy
+							</span>
+							<br>
+							<span class="text-sm">
+								Welcome {{ if not .Context.User.ID }}{{ else }}back {{ end }}to the first ever Anarchy osu server made! If you wanna test out your cheats or someone elses cheats, you can fuck around here! {{ if not .Context.User.ID }}{{ else }}But you probably already knew that.{{ end }}
+							</span>
+							<div class="buttons">
+								<a href="{{ if not .Context.User.ID }}/register{{ else }}/u/{{ .Context.User.ID }}{{ end }}" class="home-btn btn-key">{{ if not .Context.User.ID }} register here {{else}} view profile {{ end }} </a>
+								<a href="{{ if not .Context.User.ID }}/static/anarchy.exe{{ else }}/settings{{ end }}" class="home-btn btn-how" style="margin-left: 6px;">{{ if not .Context.User.ID }} download switcher {{ else }} settings {{ end }}</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<br>
+<br>
+	{{/* Global Statistics */}}
+        <div class="ui stackable four grid">
+            <div class="eight wide column">
+                <div class="ui blue segment">
+                    <div class="ui grid">
+                        <div class="four wide column">
+                            <i class="user icon status-icon"></i>
+                        </div>
+                        <div class="twelve wide column">
+			    {{ range $key, $value := (qb "SELECT COUNT(*) FROM users WHERE privileges >= 3") }}
+                            <p class="status-head">{{ rediget "ripple:online_users" }} / {{ $value }}</p>
+			    {{ end }}
+                            <p class="status-footer">Online / Registered</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+	    <div class="eight wide column">
+	       <div class="ui orange segment">
+	          <div class="ui grid">
+                     <div class="four wide column">
+                         <i class="user plus icon status-icon"></i>
+		     </div>
+                     <div class="twelve wide column">
+		         {{ range $key, $value := (qb "SELECT username FROM users WHERE privileges >=3 ORDER BY id DESC LIMIT 1") }}
+                         <p class="status-head">{{ $value }}</p>
+                         {{ end }}
+		         <p class="status-footer">Latest Player</p>
+		     </div>
+	         </div>
+	     </div>
+	</div>
+            <div class="eight wide column">
+	       <div class="ui yellow segment">
+                 <div class="ui grid">
+                    <div class="four wide column">
+                       <i class="thumbs up icon status-icon"></i>
+                    </div>
+                    <div class="twelve wide column">
+                       {{ $d := (qb "SELECT ROUND(pp) AS pp, users.username, users.id FROM scores INNER JOIN users ON scores.userid = users.id WHERE scores.play_mode = 0 AND completed = 3 AND users.privileges > 2 ORDER BY pp DESC LIMIT 1") }}
+                       <p class="status-head">{{ $d.pp }}pp</p>
+                       <p class="status-head" style="font-size: 10px!important;">Done by <a href="/u/{{ $d.id }}">{{ $d.username }}</a></p>
+                       <p class="status-footer">Top Score</p>
+                    </div>
+                 </div>
+              </div>
+            </div>
+	    <div class="eight wide column">
+               <div class="ui pink segment">
+                  <div class="ui grid">
+                     <div class="four wide column">
+                        <i class="angle double right icon status-icon"></i>
+                     </div>
+                     <div class="twelve wide column">
+                        {{ $value := (qb "SELECT ROUND(SUM(scores.pp)) AS pp FROM scores INNER JOIN users ON scores.userid = users.id WHERE scores.completed = 3 AND scores.play_mode = 0 AND users.privileges > 2") }}
+                        <p class="status-head">{{ $value.pp }}</p>
+                        <p class="status-footer">Total PP</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+	</div> {{/* Global Stats end past this /div */}}
+</div>
+{{ end }}
+

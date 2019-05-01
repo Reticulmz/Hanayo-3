@@ -1,0 +1,14 @@
+{{/*###
+Handler=/not_found_copy
+TitleBar=Not Found
+*/}}
+{{ define "tpl" }}
+{{ $cf := .ClientFlags }}
+{{ $ds := band $cf 1 }}
+{{ $   := . }}
+<div class="ui container">
+	<div class="ui segment">
+				<a href="/easteregg1" style="color:white;" title="Yes."><h3>{{ .T "Are you sure we are at the right place?" }}</h3>
+	</div>
+</div>
+{{ end }}

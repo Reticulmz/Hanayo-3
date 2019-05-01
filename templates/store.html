@@ -1,0 +1,26 @@
+{{/*###
+Handler=/store
+TitleBar=Store
+KyutGrill=donate2.jpg
+*/}}
+{{ define "tpl" }}
+<div class="ui container">
+	<div class="ui red center aligned segment">
+		<h1 class="ui center aligned header">
+			April Fools!
+			<br><br>Redirecting..
+		</h1>
+		<h5 class="ui center aligned header">
+			Atoka will always be Free-To-Play!
+			<br>Though if you'd like to <a href="/donate">support us</a>
+			<br>it would be mutch appreciated!
+		<h5>
+	</div>
+	<script> {{/* Redirect to Rick Roll after 1.5 seconds. Should be long enough for readers. Unless you are slow. */}}
+		setTimeout(memeTeam, 5000);
+		function memeTeam() {
+			window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+		}
+	</script>
+</div>
+{{ end }}

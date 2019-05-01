@@ -1,0 +1,18 @@
+{{/*###
+Handler=/easteregg1
+TitleBar=Easter Egg #1!
+AdditionalJS=https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/9.0.0/nouislider.min.js
+*/}}
+{{ define "tpl" }}
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/9.0.0/nouislider.min.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<div class="ui container">
+			<div class="ui segment">
+				<h1 class="ui center aligned header no bottom margin" style="margin: 0 auto; display: table;">
+					<i class="fas fa-egg" style="font-size: 90%;"></i><br><div class="content">{{ $.T "You've found the first Easter Egg!" }}</div>
+				</h1>
+			</div>
+		</div>
+
+
+{{end}}
