@@ -12,7 +12,7 @@ func homepagePage(c *gin.Context) {
 
 data := new(homepageData)
 
-defer resp(c, 200, "homepage2.html", data)
+defer resp(c, 200, "home.html", data)
 
 data.DisableHH = true
 }
