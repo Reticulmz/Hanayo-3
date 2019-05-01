@@ -23,3 +23,13 @@ The key concepts and insights for me where:
 
 But don't stop here. Actually making a project using Vue helps you to understand this much more easily than using mere words. Go ahead and build something, even if just to play around!
 
+## How to install?
+
+* Download it: `go get -u github.com/osuhomaru/hanayo`
+* Go to /root and paste the command: `cd go/src/github.com/osuhomaru/homaru`
+* Install dependencies: `./dep ensure` <-- Run this in `go/src/github.com/osuhomaru/homaru`
+* Build it: `go build .`
+* Run it: `go run .`
+* Edit configuration: `nano hanayo.conf`
+
+Contact me on [Discord](https://discord.gg/cnaDpVY) if you need any help
